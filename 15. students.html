@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Students</title>
+
+<link rel="stylesheet"
+      href="style.css">
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+<div class="brand">AMS</div>
+
+<a href="dashboard.html">🏠 Dashboard</a>
+
+<a href="students.html"
+   class="active">
+   👨‍🎓 Students
+</a>
+
+<a href="teachers.html">👨‍🏫 Teachers</a>
+
+<a href="subjects.html">📚 Subjects</a>
+
+<a href="attendance.html">✅ Attendance</a>
+
+<a href="records.html">📋 Records</a>
+
+<a href="reports.html">📊 Reports</a>
+
+<a href="index.html">🚪 Logout</a>
+
+</aside>
+
+
+<main class="main-content">
+
+<header class="topbar">
+
+<h2>Student Management</h2>
+
+</header>
+
+
+<section class="content">
+
+<div class="card">
+
+<div class="card-header">
+
+<h3>Students</h3>
+
+<button class="primary-btn"
+        onclick="showStudentForm()">
++ Add Student
+</button>
+
+</div>
+
+
+<div id="studentForm"
+     class="form-panel"
+     style="display:none">
+
+<input id="studentId"
+       placeholder="Student ID">
+
+<input id="studentName"
+       placeholder="Student Name">
+
+<input id="studentDepartment"
+       placeholder="Department">
+
+<input id="studentClass"
+       placeholder="Class">
+
+<input id="studentPhone"
+       placeholder="Phone">
+
+<button class="success-btn"
+        onclick="addStudent()">
+Save Student
+</button>
+
+</div>
+
+
+<input class="search"
+       id="studentSearch"
+       placeholder="Search students..."
+       onkeyup="filterStudents()">
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Name</th>
+<th>Department</th>
+<th>Class</th>
+<th>Phone</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="studentTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+<script src="script.js"></script>
+
+<script>
+
+loadStudents();
+
+</script>
+
+</body>
+
+</html>
