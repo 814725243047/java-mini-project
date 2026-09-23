@@ -1,0 +1,35 @@
+AttendanceManagementSystem/
+│
+├── pom.xml
+│
+└── src/
+    └── main/
+        ├── java/
+        │   └── com/
+        │       └── attendance/
+        │           ├── AttendanceApplication.java
+        │           ├── controller/
+        │           │   ├── LoginController.java
+        │           │   ├── StudentController.java
+        │           │   ├── TeacherController.java
+        │           │   ├── SubjectController.java
+        │           │   └── AttendanceController.java
+        │           │
+        │           └── model/
+        │               ├── Student.java
+        │               ├── Teacher.java
+        │               ├── Subject.java
+        │               └── Attendance.java
+        │
+        └── resources/
+            └── static/
+                ├── index.html
+                ├── dashboard.html
+                ├── students.html
+                ├── teachers.html
+                ├── subjects.html
+                ├── attendance.html
+                ├── records.html
+                ├── reports.html
+                ├── style.css
+                └── script.js
