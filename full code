@@ -1,0 +1,1069 @@
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class AttendanceManagementSystem extends JFrame {
+
+    // ==============================
+    // DATA
+    // ==============================
+
+    static class Student {
+        String name;
+        String semester;
+
+        Student(String name, String semester) {
+            this.name = name;
+            this.semester = semester;
+        }
+    }
+
+    static class Teacher {
+        String name;
+        String username;
+        String password;
+
+        Teacher(String name, String username, String password) {
+            this.name = name;
+            this.username = username;
+            this.password = password;
+        }
+    }
+
+    static class Attendance {
+        String student;
+        String status;
+
+        Attendance(String student, String status) {
+            this.student = student;
+            this.status = status;
+        }
+    }
+
+    // Student list
+    static List<Student> students = new ArrayList<>();
+
+    // Teacher list
+    static List<Teacher> teachers = new ArrayList<>();
+
+    // Subject -> Attendance list
+    static Map<String, List<Attendance>> attendance =
+            new HashMap<>();
+
+    static String[] subjects = {
+            "Maths",
+            "Physics",
+            "Chemistry"
+    };
+
+    // ==============================
+    // CONSTRUCTOR
+    // ==============================
+
+    public AttendanceManagementSystem() {
+
+        // Sample students
+        students.add(new Student("Student1", "2"));
+        students.add(new Student("Student2", "2"));
+        students.add(new Student("Student3", "3"));
+        students.add(new Student("Student4", "4"));
+
+        // Sample teachers
+        teachers.add(
+                new Teacher("Teacher 1", "teacher1", "tkey1")
+        );
+
+        teachers.add(
+                new Teacher("Teacher 2", "teacher2", "tkey2")
+        );
+
+        // Create attendance lists
+        for (String subject : subjects) {
+            attendance.put(subject, new ArrayList<>());
+        }
+
+        showLogin();
+    }
+
+    // ==============================
+    // LOGIN SCREEN
+    // ==============================
+
+    private void showLogin() {
+
+        getContentPane().removeAll();
+
+        setTitle("Attendance Management System");
+        setSize(500, 400);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(null);
+
+        JLabel title = new JLabel(
+                "ATTENDANCE MANAGEMENT SYSTEM",
+                SwingConstants.CENTER
+        );
+
+        title.setFont(
+                new Font("Arial", Font.BOLD, 20)
+        );
+
+        title.setBounds(50, 30, 400, 40);
+
+        JLabel userLabel = new JLabel("Username");
+        userLabel.setBounds(80, 100, 100, 30);
+
+        JTextField username =
+                new JTextField();
+
+        username.setBounds(
+                200, 100, 200, 30
+        );
+
+        JLabel passwordLabel =
+                new JLabel("Password");
+
+        passwordLabel.setBounds(
+                80, 150, 100, 30
+        );
+
+        JPasswordField password =
+                new JPasswordField();
+
+        password.setBounds(
+                200, 150, 200, 30
+        );
+
+        JLabel typeLabel =
+                new JLabel("User Type");
+
+        typeLabel.setBounds(
+                80, 200, 100, 30
+        );
+
+        JComboBox<String> userType =
+                new JComboBox<>(
+                        new String[]{
+                                "Administrator",
+                                "Teacher"
+                        }
+                );
+
+        userType.setBounds(
+                200, 200, 200, 30
+        );
+
+        JButton login =
+                new JButton("Login");
+
+        login.setBounds(
+                120, 270, 110, 40
+        );
+
+        JButton exit =
+                new JButton("Exit");
+
+        exit.setBounds(
+                270, 270, 110, 40
+        );
+
+        mainPanel.add(title);
+        mainPanel.add(userLabel);
+        mainPanel.add(username);
+        mainPanel.add(passwordLabel);
+        mainPanel.add(password);
+        mainPanel.add(typeLabel);
+        mainPanel.add(userType);
+        mainPanel.add(login);
+        mainPanel.add(exit);
+
+        login.addActionListener(e -> {
+
+            String user =
+                    username.getText().trim();
+
+            String pass =
+                    new String(
+                            password.getPassword()
+                    );
+
+            String type =
+                    (String) userType.getSelectedItem();
+
+            if (type.equals("Administrator")) {
+
+                // Administrator login
+                if (user.equals("admin")
+                        && pass.equals("admin123")) {
+
+                    showAdminMenu();
+
+                } else {
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Invalid Administrator login"
+                    );
+                }
+
+            } else {
+
+                Teacher teacher =
+                        findTeacher(user, pass);
+
+                if (teacher != null) {
+
+                    showTeacherMenu(
+                            teacher.name
+                    );
+
+                } else {
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Invalid Teacher login"
+                    );
+                }
+            }
+        });
+
+        exit.addActionListener(
+                e -> System.exit(0)
+        );
+
+        add(mainPanel);
+
+        revalidate();
+        repaint();
+    }
+
+    // ==============================
+    // FIND TEACHER
+    // ==============================
+
+    private Teacher findTeacher(
+            String username,
+            String password) {
+
+        for (Teacher teacher : teachers) {
+
+            if (teacher.username.equals(username)
+                    && teacher.password.equals(password)) {
+
+                return teacher;
+            }
+        }
+
+        return null;
+    }
+
+    // ==============================
+    // ADMIN MENU
+    // ==============================
+
+    private void showAdminMenu() {
+
+        getContentPane().removeAll();
+
+        setTitle("Administrator");
+
+        JPanel panel =
+                new JPanel();
+
+        panel.setLayout(null);
+
+        JLabel title =
+                new JLabel(
+                        "ADMINISTRATOR",
+                        SwingConstants.CENTER
+                );
+
+        title.setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        22
+                )
+        );
+
+        title.setBounds(
+                100, 30, 300, 40
+        );
+
+        JButton addStudent =
+                new JButton("Add Student");
+
+        addStudent.setBounds(
+                140, 100, 220, 45
+        );
+
+        JButton addTeacher =
+                new JButton("Add Teacher");
+
+        addTeacher.setBounds(
+                140, 160, 220, 45
+        );
+
+        JButton report =
+                new JButton("Attendance Report");
+
+        report.setBounds(
+                140, 220, 220, 45
+        );
+
+        JButton logout =
+                new JButton("Logout");
+
+        logout.setBounds(
+                140, 280, 220, 45
+        );
+
+        panel.add(title);
+        panel.add(addStudent);
+        panel.add(addTeacher);
+        panel.add(report);
+        panel.add(logout);
+
+        addStudent.addActionListener(
+                e -> showAddStudent()
+        );
+
+        addTeacher.addActionListener(
+                e -> showAddTeacher()
+        );
+
+        report.addActionListener(
+                e -> showSubjectSelection(true)
+        );
+
+        logout.addActionListener(
+                e -> showLogin()
+        );
+
+        add(panel);
+
+        revalidate();
+        repaint();
+    }
+
+    // ==============================
+    // TEACHER MENU
+    // ==============================
+
+    private void showTeacherMenu(
+            String teacherName) {
+
+        getContentPane().removeAll();
+
+        setTitle("Teacher");
+
+        JPanel panel =
+                new JPanel();
+
+        panel.setLayout(null);
+
+        JLabel title =
+                new JLabel(
+                        "WELCOME " + teacherName,
+                        SwingConstants.CENTER
+                );
+
+        title.setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        20
+                )
+        );
+
+        title.setBounds(
+                80, 30, 340, 40
+        );
+
+        JButton attendanceButton =
+                new JButton("Take Attendance");
+
+        attendanceButton.setBounds(
+                130, 110, 240, 45
+        );
+
+        JButton reportButton =
+                new JButton("Generate Report");
+
+        reportButton.setBounds(
+                130, 170, 240, 45
+        );
+
+        JButton logoutButton =
+                new JButton("Logout");
+
+        logoutButton.setBounds(
+                130, 230, 240, 45
+        );
+
+        panel.add(title);
+        panel.add(attendanceButton);
+        panel.add(reportButton);
+        panel.add(logoutButton);
+
+        attendanceButton.addActionListener(
+                e -> showSubjectSelection(false)
+        );
+
+        reportButton.addActionListener(
+                e -> showSubjectSelection(true)
+        );
+
+        logoutButton.addActionListener(
+                e -> showLogin()
+        );
+
+        add(panel);
+
+        revalidate();
+        repaint();
+    }
+
+    // ==============================
+    // SUBJECT SELECTION
+    // ==============================
+
+    private void showSubjectSelection(
+            boolean report) {
+
+        getContentPane().removeAll();
+
+        setTitle("Select Subject");
+
+        JPanel panel =
+                new JPanel();
+
+        panel.setLayout(null);
+
+        JLabel title =
+                new JLabel(
+                        "SELECT SUBJECT",
+                        SwingConstants.CENTER
+                );
+
+        title.setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        20
+                )
+        );
+
+        title.setBounds(
+                100, 30, 300, 40
+        );
+
+        JComboBox<String> subjectBox =
+                new JComboBox<>(subjects);
+
+        subjectBox.setBounds(
+                120, 100, 260, 35
+        );
+
+        JButton next =
+                new JButton(
+                        report
+                                ? "Generate Report"
+                                : "Take Attendance"
+                );
+
+        next.setBounds(
+                120, 160, 260, 40
+        );
+
+        JButton back =
+                new JButton("Back");
+
+        back.setBounds(
+                120, 220, 260, 40
+        );
+
+        panel.add(title);
+        panel.add(subjectBox);
+        panel.add(next);
+        panel.add(back);
+
+        next.addActionListener(e -> {
+
+            String subject =
+                    (String)
+                            subjectBox.getSelectedItem();
+
+            if (report) {
+
+                showReport(subject);
+
+            } else {
+
+                showAttendance(subject);
+            }
+        });
+
+        back.addActionListener(
+                e -> showLogin()
+        );
+
+        add(panel);
+
+        revalidate();
+        repaint();
+    }
+
+    // ==============================
+    // ADD STUDENT
+    // ==============================
+
+    private void showAddStudent() {
+
+        getContentPane().removeAll();
+
+        setTitle("Add Student");
+
+        JPanel panel =
+                new JPanel();
+
+        panel.setLayout(null);
+
+        JLabel title =
+                new JLabel(
+                        "ADD STUDENT",
+                        SwingConstants.CENTER
+                );
+
+        title.setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        20
+                )
+        );
+
+        title.setBounds(
+                100, 20, 300, 40
+        );
+
+        JLabel nameLabel =
+                new JLabel("Student Name");
+
+        nameLabel.setBounds(
+                70, 90, 120, 30
+        );
+
+        JTextField nameField =
+                new JTextField();
+
+        nameField.setBounds(
+                200, 90, 200, 30
+        );
+
+        JLabel semesterLabel =
+                new JLabel("Semester");
+
+        semesterLabel.setBounds(
+                70, 140, 120, 30
+        );
+
+        JTextField semesterField =
+                new JTextField();
+
+        semesterField.setBounds(
+                200, 140, 200, 30
+        );
+
+        JButton add =
+                new JButton("Add");
+
+        add.setBounds(
+                120, 210, 100, 40
+        );
+
+        JButton back =
+                new JButton("Back");
+
+        back.setBounds(
+                270, 210, 100, 40
+        );
+
+        panel.add(title);
+        panel.add(nameLabel);
+        panel.add(nameField);
+        panel.add(semesterLabel);
+        panel.add(semesterField);
+        panel.add(add);
+        panel.add(back);
+
+        add.addActionListener(e -> {
+
+            String name =
+                    nameField.getText().trim();
+
+            String semester =
+                    semesterField.getText().trim();
+
+            if (name.isEmpty()
+                    || semester.isEmpty()) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Please enter all details."
+                );
+
+                return;
+            }
+
+            students.add(
+                    new Student(
+                            name,
+                            semester
+                    )
+            );
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Student added successfully."
+            );
+
+            nameField.setText("");
+            semesterField.setText("");
+        });
+
+        back.addActionListener(
+                e -> showAdminMenu()
+        );
+
+        add(panel);
+
+        revalidate();
+        repaint();
+    }
+
+    // ==============================
+    // ADD TEACHER
+    // ==============================
+
+    private void showAddTeacher() {
+
+        getContentPane().removeAll();
+
+        setTitle("Add Teacher");
+
+        JPanel panel =
+                new JPanel();
+
+        panel.setLayout(null);
+
+        JLabel title =
+                new JLabel(
+                        "ADD TEACHER",
+                        SwingConstants.CENTER
+                );
+
+        title.setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        20
+                )
+        );
+
+        title.setBounds(
+                100, 20, 300, 40
+        );
+
+        JLabel nameLabel =
+                new JLabel("Teacher Name");
+
+        nameLabel.setBounds(
+                60, 80, 130, 30
+        );
+
+        JTextField nameField =
+                new JTextField();
+
+        nameField.setBounds(
+                200, 80, 200, 30
+        );
+
+        JLabel userLabel =
+                new JLabel("Username");
+
+        userLabel.setBounds(
+                60, 130, 130, 30
+        );
+
+        JTextField userField =
+                new JTextField();
+
+        userField.setBounds(
+                200, 130, 200, 30
+        );
+
+        JLabel passLabel =
+                new JLabel("Password");
+
+        passLabel.setBounds(
+                60, 180, 130, 30
+        );
+
+        JPasswordField passField =
+                new JPasswordField();
+
+        passField.setBounds(
+                200, 180, 200, 30
+        );
+
+        JButton add =
+                new JButton("Add");
+
+        add.setBounds(
+                120, 240, 100, 40
+        );
+
+        JButton back =
+                new JButton("Back");
+
+        back.setBounds(
+                270, 240, 100, 40
+        );
+
+        panel.add(title);
+        panel.add(nameLabel);
+        panel.add(nameField);
+        panel.add(userLabel);
+        panel.add(userField);
+        panel.add(passLabel);
+        panel.add(passField);
+        panel.add(add);
+        panel.add(back);
+
+        add.addActionListener(e -> {
+
+            String name =
+                    nameField.getText().trim();
+
+            String username =
+                    userField.getText().trim();
+
+            String password =
+                    new String(
+                            passField.getPassword()
+                    );
+
+            if (name.isEmpty()
+                    || username.isEmpty()
+                    || password.isEmpty()) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Please enter all details."
+                );
+
+                return;
+            }
+
+            if (findTeacher(
+                    username,
+                    password
+            ) != null) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Teacher already exists."
+                );
+
+                return;
+            }
+
+            teachers.add(
+                    new Teacher(
+                            name,
+                            username,
+                            password
+                    )
+            );
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Teacher added successfully."
+            );
+
+            nameField.setText("");
+            userField.setText("");
+            passField.setText("");
+        });
+
+        back.addActionListener(
+                e -> showAdminMenu()
+        );
+
+        add(panel);
+
+        revalidate();
+        repaint();
+    }
+
+    // ==============================
+    // TAKE ATTENDANCE
+    // ==============================
+
+    private void showAttendance(
+            String subject) {
+
+        getContentPane().removeAll();
+
+        setTitle(
+                "Take Attendance - " + subject
+        );
+
+        JPanel panel =
+                new JPanel();
+
+        panel.setLayout(null);
+
+        JLabel title =
+                new JLabel(
+                        "ATTENDANCE - " + subject,
+                        SwingConstants.CENTER
+                );
+
+        title.setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        20
+                )
+        );
+
+        title.setBounds(
+                80, 30, 340, 40
+        );
+
+        JLabel studentLabel =
+                new JLabel("Select Student");
+
+        studentLabel.setBounds(
+                70, 100, 120, 30
+        );
+
+        JComboBox<String> studentBox =
+                new JComboBox<>();
+
+        for (Student student : students) {
+
+            studentBox.addItem(
+                    student.name
+            );
+        }
+
+        studentBox.setBounds(
+                200, 100, 220, 30
+        );
+
+        JButton present =
+                new JButton("Present");
+
+        present.setBounds(
+                70, 170, 120, 40
+        );
+
+        JButton absent =
+                new JButton("Absent");
+
+        absent.setBounds(
+                210, 170, 120, 40
+        );
+
+        JButton back =
+                new JButton("Back");
+
+        back.setBounds(
+                140, 230, 120, 40
+        );
+
+        panel.add(title);
+        panel.add(studentLabel);
+        panel.add(studentBox);
+        panel.add(present);
+        panel.add(absent);
+        panel.add(back);
+
+        present.addActionListener(
+                e -> saveAttendance(
+                        subject,
+                        (String)
+                                studentBox
+                                        .getSelectedItem(),
+                        "Present"
+                )
+        );
+
+        absent.addActionListener(
+                e -> saveAttendance(
+                        subject,
+                        (String)
+                                studentBox
+                                        .getSelectedItem(),
+                        "Absent"
+                )
+        );
+
+        back.addActionListener(
+                e -> showLogin()
+        );
+
+        add(panel);
+
+        revalidate();
+        repaint();
+    }
+
+    // ==============================
+    // SAVE ATTENDANCE
+    // ==============================
+
+    private void saveAttendance(
+            String subject,
+            String student,
+            String status) {
+
+        if (student == null) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a student."
+            );
+
+            return;
+        }
+
+        attendance
+                .get(subject)
+                .add(
+                        new Attendance(
+                                student,
+                                status
+                        )
+                );
+
+        JOptionPane.showMessageDialog(
+                this,
+                student
+                        + " marked "
+                        + status
+        );
+    }
+
+    // ==============================
+    // REPORT
+    // ==============================
+
+    private void showReport(
+            String subject) {
+
+        getContentPane().removeAll();
+
+        setTitle(
+                "Attendance Report - "
+                        + subject
+        );
+
+        JPanel panel =
+                new JPanel(
+                        new BorderLayout()
+                );
+
+        JLabel title =
+                new JLabel(
+                        "ATTENDANCE REPORT - "
+                                + subject,
+                        SwingConstants.CENTER
+                );
+
+        title.setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        20
+                )
+        );
+
+        DefaultTableModel model =
+                new DefaultTableModel();
+
+        model.addColumn("Student");
+        model.addColumn("Status");
+
+        List<Attendance> list =
+                attendance.get(subject);
+
+        for (Attendance a : list) {
+
+            model.addRow(
+                    new Object[]{
+                            a.student,
+                            a.status
+                    }
+            );
+        }
+
+        JTable table =
+                new JTable(model);
+
+        JScrollPane scrollPane =
+                new JScrollPane(table);
+
+        JButton back =
+                new JButton("Back");
+
+        back.addActionListener(
+                e -> showLogin()
+        );
+
+        panel.add(
+                title,
+                BorderLayout.NORTH
+        );
+
+        panel.add(
+                scrollPane,
+                BorderLayout.CENTER
+        );
+
+        panel.add(
+                back,
+                BorderLayout.SOUTH
+        );
+
+        add(panel);
+
+        revalidate();
+        repaint();
+    }
+
+    // ==============================
+    // MAIN
+    // ==============================
+
+    public static void main(
+            String[] args) {
+
+        SwingUtilities.invokeLater(() -> {
+
+            AttendanceManagementSystem app =
+                    new AttendanceManagementSystem();
+
+            app.setVisible(true);
+        });
+    }
+}
