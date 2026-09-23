@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard</title>
+
+<link rel="stylesheet"
+      href="style.css">
+
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            AMS
+        </div>
+
+        <a href="dashboard.html"
+           class="active">
+            🏠 Dashboard
+        </a>
+
+        <a href="students.html">
+            👨‍🎓 Students
+        </a>
+
+        <a href="teachers.html">
+            👨‍🏫 Teachers
+        </a>
+
+        <a href="subjects.html">
+            📚 Subjects
+        </a>
+
+        <a href="attendance.html">
+            ✅ Attendance
+        </a>
+
+        <a href="records.html">
+            📋 Records
+        </a>
+
+        <a href="reports.html">
+            📊 Reports
+        </a>
+
+        <a href="index.html"
+           onclick="logout()">
+            🚪 Logout
+        </a>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <h2>Dashboard</h2>
+
+            <div>
+                Administrator 👤
+            </div>
+
+        </header>
+
+
+        <section class="content">
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <p>Total Students</p>
+                    <h2 id="totalStudents">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Total Teachers</p>
+                    <h2 id="totalTeachers">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Total Subjects</p>
+                    <h2 id="totalSubjects">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Overall Attendance</p>
+                    <h2 id="overallAttendance">
+                        0%
+                    </h2>
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
+                    Attendance Overview
+                </h3>
+
+                <div class="overview">
+
+                    <div>
+                        <span class="circle green">
+                        </span>
+
+                        Present
+
+                        <strong id="presentCount">
+                            0
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span class="circle red">
+                        </span>
+
+                        Absent
+
+                        <strong id="absentCount">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
+                    Quick Actions
+                </h3>
+
+                <div class="quick-actions">
+
+                    <a href="students.html">
+                        Add Student
+                    </a>
+
+                    <a href="attendance.html">
+                        Take Attendance
+                    </a>
+
+                    <a href="reports.html">
+                        View Reports
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="script.js"></script>
+
+<script>
+
+loadDashboard();
+
+</script>
+
+</body>
+
+</html>
